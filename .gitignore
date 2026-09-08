@@ -1,0 +1,9 @@
+target/
+.flattened-pom.xml
+*.class
+*.iml
+.idea/workspace.xml
+.idea/shelf/
+.idea/httpRequests/
+.idea/dataSources/
+.idea/dataSources.local.xml

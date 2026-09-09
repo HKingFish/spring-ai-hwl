@@ -28,6 +28,15 @@ public interface BaseLlmService {
      */
     Flux<String> streamChat(String message);
 
+    /**
+     * 带 Tool 的对话。
+     *
+     * @param userMessage 用户输入
+     * @param conversationId 会话 ID
+     * @return 模型回复
+     */
+    String chatWithTools(String userMessage, String conversationId);
+
 
 
 }

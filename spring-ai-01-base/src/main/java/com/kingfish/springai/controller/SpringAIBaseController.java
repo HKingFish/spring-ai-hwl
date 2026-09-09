@@ -2,9 +2,6 @@ package com.kingfish.springai.controller;
 
 import com.kingfish.springai.service.BaseLlmService;
 import jakarta.annotation.Resource;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +16,10 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/base")
 public class SpringAIBaseController {
 
+    /**
+     * 未传会话 ID 时的默认会话。
+     */
+    private static final String DEFAULT_CONVERSATION_ID = "tool-demo";
 
     @Resource
     private BaseLlmService baseLlmService;
@@ -45,5 +46,17 @@ public class SpringAIBaseController {
         return baseLlmService.streamChat(message);
     }
 
+    /**
+     * 带 Tool 的聊天
+     *
+     * @param message 用户输入
+     * @param conversationId 会话 ID，可空
+     * @return 模型回复
+     */
+    @PostMapping("toolChat")
+    public String toolChat(String message, String conversationId) {
+        return baseLlmService.chatWithTools(message,
+                conversationId == null || conversationId.isBlank() ? DEFAULT_CONVERSATION_ID : conversationId);
+    }
 
 }

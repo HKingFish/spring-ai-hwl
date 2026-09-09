@@ -1,20 +1,14 @@
 package com.kingfish.springai.service;
 
 import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.MessageWindowChatMemory;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.openai.OpenAiChatModel;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.ai.tool.ToolCallback;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MimeTypeUtils;
 import reactor.core.publisher.Flux;
-
-import java.io.IOException;
-import java.util.*;
-
 
 /**
  * @Author : haowl
@@ -24,11 +18,25 @@ import java.util.*;
 @Service
 public class BaseLlmServiceImpl implements BaseLlmService {
 
+    private static final Logger log = LoggerFactory.getLogger(BaseLlmServiceImpl.class);
+
     @Resource
     private OpenAiChatModel chatModel;
 
     @Resource
     private ChatClient chatClient;
+
+    /**
+     * MethodToolCallback 示例。
+     */
+    @Resource(name = "currentDateTimeToolCallback")
+    private ToolCallback currentDateTimeToolCallback;
+
+    /**
+     * FunctionToolCallback 示例。
+     */
+    @Resource(name = "currentWeatherToolCallback")
+    private ToolCallback currentWeatherToolCallback;
 
     @Override
     public String chat(String userMessage) {
@@ -40,5 +48,15 @@ public class BaseLlmServiceImpl implements BaseLlmService {
         return chatModel.stream(message);
     }
 
-
+    @Override
+    public String chatWithTools(String userMessage, String conversationId) {
+        log.info("[BaseLlmService][chatWithTools, conversationId={}, query={}]", conversationId, userMessage);
+        return chatClient.prompt()
+                .system("你是助手，需要当前时间或天气时必须调用已提供的工具，再根据工具结果回答。")
+                .user(userMessage)
+                .tools(currentDateTimeToolCallback, currentWeatherToolCallback)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
+                .call()
+                .content();
+    }
 }

@@ -1,5 +1,6 @@
 package com.kingfish.springai.service;
 
+import com.kingfish.springai.advisor.LogAdvisor;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,7 @@ public class BaseLlmServiceImpl implements BaseLlmService {
                 .user(userMessage)
                 .tools(currentDateTimeToolCallback, currentWeatherToolCallback)
                 .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
+                .advisors(new LogAdvisor())
                 .call()
                 .content();
     }

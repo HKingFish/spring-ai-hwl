@@ -1,0 +1,23 @@
+server:
+  port: 9102
+  servlet:
+    context-path: /spring-ai/02-agent
+
+spring:
+  application:
+    name: spring-ai-agent-patterns
+  ai:
+    openai:
+      # DeepSeek 兼容 OpenAI 协议
+      base-url: https://api.deepseek.com
+      api-key: ${DEEPSEEK_API_KEY}
+      chat:
+        model: deepseek-v4-flash
+        temperature: 0.7
+    model:
+      embedding: none
+      image: none
+      moderation: none
+      audio:
+        speech: none
+        transcription: none

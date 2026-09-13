@@ -33,22 +33,22 @@ public class AgentPatternsController {
     /**
      * Plan & Execute：先出计划再逐步执行。
      *
-     * @param goal 例如：规划一次杭州半日游，先看天气再推荐景点
+     * @param message 例如：规划一次杭州半日游，先看天气再推荐景点
      * @return 执行结果
      */
     @PostMapping("planExecute")
-    public PatternResult planAndExecute(String goal) {
-        return agentPatternsService.planAndExecute(goal);
+    public PatternResult planAndExecute(String message) {
+        return agentPatternsService.planAndExecute(message);
     }
 
     /**
      * Reflection：写一稿，评审不过就改。
      *
-     * @param task 例如：写一段约 80 字的杭州旅游介绍，要点出具体景点
+     * @param message 例如：写一段约 80 字的杭州旅游介绍，要点出具体景点
      * @return 执行结果
      */
     @PostMapping("reflect")
-    public PatternResult reflect(String task) {
-        return agentPatternsService.reflect(task);
+    public PatternResult reflect(String message) {
+        return agentPatternsService.reflect(message);
     }
 }
